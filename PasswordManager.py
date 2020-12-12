@@ -43,11 +43,58 @@ def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symb
     else:
         if s_symbols:
             if password[0] == '_':
-                password[0] = random.choice(valid_characters[:-1])
+                password[0] = random.choice(low_register+high_register+numbers)
             if password[s_amount-1] == '_':
-                password[s_amount-1] = random.choice(valid_characters[:-1])
+                password[s_amount-1] = random.choice(low_register+high_register+numbers)
             else:
                 if '_' not in password:
                     password[random.randint(1, s_amount-2)] = '_'
 
     return ''.join(password)
+
+
+def password_security_check(password):
+    """
+    The function checks the password for strength.
+
+
+    :param password: str() - Password received from the user
+    :return: True if the password is strong, otherwise Falls + recommended password
+    """
+    global low_register, high_register, numbers
+    secure = 0
+    password = [i for i in password]
+    recommended_password = []
+
+    # Checking if all characters are correct
+    for i in password:
+        if i not in low_register+high_register+numbers+specially_symbols:
+            password[password.index(i)] = random.choice(low_register+high_register+numbers)
+            secure += 1
+
+    # Add random characters if password length is less than six.
+    if len(password) < 6:
+        for i in range(6-len(password)):
+            recommended_password.append(random.choice(low_register+high_register+numbers))
+        else:
+            secure += 1
+            password += recommended_password
+            if specially_symbols not in password:
+                password[random.randint(1, len(password)-2)] = specially_symbols[0]
+
+    if password[0] == specially_symbols[0]:
+        password[0] = random.choice(low_register+high_register+numbers)
+        secure += 1
+
+    if password[::-1][0] == specially_symbols[0]:
+        password[::-1].remove(specially_symbols[0])
+        password.append(random.choice(low_register + high_register + numbers))
+        secure += 1
+
+    for i, j in enumerate(password):
+        if j == password[i-1] == specially_symbols[0]:
+            password[i] = random.choice(low_register + high_register + numbers)
+            secure += 1
+
+    return [secure == 0, ''.join(password)]
+
