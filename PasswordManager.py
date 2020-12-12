@@ -98,3 +98,22 @@ def password_security_check(password):
 
     return [secure == 0, ''.join(password)]
 
+
+def check_correct_username(user_name):
+    """
+    The function will check the length of the name and the correctness of characters.
+
+
+    :param user_name: Original username
+    :return: True or False
+    """
+    global low_register, high_register, numbers, specially_symbols
+
+    if len(user_name) < 3:
+        return False
+
+    for i in user_name:
+        if i not in low_register + high_register + numbers + specially_symbols:
+            return False
+    else:
+        return True
