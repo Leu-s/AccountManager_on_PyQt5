@@ -20,14 +20,16 @@ def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symb
 
     global low_register, high_register, numbers, specially_symbols
     password = []
-    # Создаем список с допустимыми символами
+
+    # Creating the list with valid characters
     valid_characters = [symbol for symbol in low_register if low_reg],\
                        [symbol for symbol in high_register if high_reg],\
                        [symbol for symbol in numbers if num],\
                        [symbol for symbol in specially_symbols if s_symbols]
     valid_characters = [i for i in valid_characters for i in i]
 
-    if not valid_characters or len(valid_characters) == 5:
+    # Checking the list with valid characters to lowercase and uppercase symbols or numbers
+    if low_reg == high_reg == num is False:
         return 'Select characters or number to start!'
 
     for i in range(s_amount):
@@ -47,4 +49,5 @@ def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symb
             else:
                 if '_' not in password:
                     password[random.randint(1, s_amount-2)] = '_'
+
     return ''.join(password)

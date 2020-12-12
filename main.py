@@ -16,7 +16,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
 
     def on_off_all_symbols(self):
         """
-        Изменение состояния кнопок с допустимыми символами для генерации пароля
+        Changing the state of buttons with valid characters to generate a password.
         """
         enable_status = [True if not self.radioButton_default_symbols.isChecked() else False]
         check_status = [False if not enable_status else True]
@@ -51,8 +51,8 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
 def main():
     app = QtWidgets.QApplication(sys.argv)
     window = AccountManager()
-    window.show()  # Показываем окно
-    app.exec_()  # Запуск приложения
+    window.show()  # Show the window
+    app.exec_()  # Start application
 
 
 if __name__ == '__main__':
