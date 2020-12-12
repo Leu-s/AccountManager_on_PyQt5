@@ -25,6 +25,13 @@
   <property name="windowTitle">
    <string>Account Manager</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>static/icon.png</normaloff>static/icon.png</iconset>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -42,7 +49,7 @@
      <item>
       <widget class="QGroupBox" name="UserInitialization">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -110,7 +117,7 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="0">
           <widget class="QLabel" name="lbl_Login">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Login</string>
@@ -123,21 +130,21 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="1">
           <widget class="QLineEdit" name="Line_Login">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
           <widget class="QLineEdit" name="Line_Password">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="lbl_lPassword">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Password</string>
@@ -150,7 +157,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="0" colspan="2">
           <widget class="QPushButton" name="Btn_Login">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Log in</string>
@@ -160,7 +167,7 @@ p, li { white-space: pre-wrap; }
          <item row="3" column="0" colspan="2">
           <widget class="QPushButton" name="btn_AddNew">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Add new user</string>
