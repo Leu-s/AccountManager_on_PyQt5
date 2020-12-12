@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 import sys
 import time
-import PasswordGenerator
+import PasswordManager
 
 ui_form = uic.loadUiType('A-Manager.ui')[0]
 
@@ -39,11 +39,11 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
             self.checkBox_Sym.setChecked(True)
             print(self.checkBox_Sym.isChecked())
 
-        password = PasswordGenerator.create_password(s_amount=int(self.symbols_amount.text()),
-                                                     num=self.checkBox_0_9.isChecked(),
-                                                     low_reg=self.checkBox_a_z.isChecked(),
-                                                     high_reg=self.checkBox_A_Z.isChecked(),
-                                                     s_symbols=self.checkBox_Sym.isChecked())
+        password = PasswordManager.create_password(s_amount=int(self.symbols_amount.text()),
+                                                   num=self.checkBox_0_9.isChecked(),
+                                                   low_reg=self.checkBox_a_z.isChecked(),
+                                                   high_reg=self.checkBox_A_Z.isChecked(),
+                                                   s_symbols=self.checkBox_Sym.isChecked())
 
         self.lineEdit_Ready_Pass.setText(password)
 
