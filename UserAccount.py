@@ -51,6 +51,7 @@ class UserAccountDB:
         # We connect the database and add a new user to it
         con_db = sqlite3.connect(self.path_to_db)
         cursor = con_db.cursor()
+        result = True
 
         sql = """
         INSERT INTO LoginPassword
@@ -63,12 +64,14 @@ class UserAccountDB:
             cursor.execute(sql, val)  # Execute SQL Query
         except sqlite3.DatabaseError as err:
             print('Error:', err)  # Displaying an error message
+            result = False
         else:
             con_db.commit()  # Requesting a transaction
 
         cursor.close()  # Close the cursor object
         con_db.close()  # Close the connection
 
+        return result
 
 
 

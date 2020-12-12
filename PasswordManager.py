@@ -43,11 +43,11 @@ def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symb
     else:
         if s_symbols:
             if password[0] == '_':
-                password[0] = random.choice(low_register+high_register+numbers)
+                password[0] = random.choice(random.choice(valid_characters[:-len(specially_symbols)]))
             if password[s_amount-1] == '_':
-                password[s_amount-1] = random.choice(low_register+high_register+numbers)
+                password[s_amount-1] = random.choice(random.choice(valid_characters[:-len(specially_symbols)]))
             else:
-                if '_' not in password:
+                if '_' not in password and s_symbols:
                     password[random.randint(1, s_amount-2)] = '_'
 
     return ''.join(password)
@@ -96,6 +96,10 @@ def password_security_check(password):
             password[i] = random.choice(low_register + high_register + numbers)
             secure += 1
 
+    if len(password) > 25:
+        password = create_password(num=True, s_symbols=True, high_reg=True, low_reg=True)
+        secure += 1
+
     return [secure == 0, ''.join(password)]
 
 
@@ -109,7 +113,7 @@ def check_correct_username(user_name):
     """
     global low_register, high_register, numbers, specially_symbols
 
-    if len(user_name) < 3:
+    if len(user_name) not in range(3, 13):
         return False
 
     for i in user_name:
