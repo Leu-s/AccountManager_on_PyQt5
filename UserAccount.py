@@ -1,6 +1,7 @@
 import hashlib
 import os
 import sqlite3
+import datetime
 
 data_path = os.path.abspath(os.curdir)
 main_db = data_path + '\\data\\main.db'
@@ -113,7 +114,12 @@ class User:
         con_db.close()  # Close the connection
         return self.access
 
-    def add_new_case(self):
+    def add_new_case(self, password_to, login, password, user_name=None, email=None):
+
+        if len(password_to) < 4 or len(login) < 4 or len(password) < 6:
+            return False
+
+        result = True
 
         create_sql = """
             CREATE TABLE IF NOT EXISTS "UserData"(
@@ -132,12 +138,13 @@ class User:
                         VALUES (?,?,?,?,?,?,?)
                         """
         values = (self.user_id,
-                  'tanks',
-                  'TankLogin',
-                  'pswd3124',
-                  'Carpe_Diem',
-                  'em@ail.com',
-                  '12.02.2011')
+                  password_to,
+                  login,
+                  password,
+                  user_name,
+                  email,
+                  datetime.datetime.now())
+
         con = sqlite3.connect(self.user_db)
         with con:
             cur = con.cursor()
@@ -151,12 +158,10 @@ class User:
         cur.close()
         con.close()
 
+        return result
+
     def __repr__(self):
         return f'User name: {self.login}\nAuthorization status: {self.access}'
 
     def __del__(self):
         print(f'{self.login} deleted.')
-
-
-usr_a_db = UserAccountDB(main_db)
-usr_a_db.add_new_user('qweasd', '123qwe')

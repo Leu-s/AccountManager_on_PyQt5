@@ -355,13 +355,20 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="7" column="2">
+         <item row="0" column="2">
           <widget class="QLabel" name="label">
            <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="text">
             <string>* -  required fields</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QLabel" name="label_add_info">
+           <property name="text">
+            <string/>
            </property>
           </widget>
          </item>

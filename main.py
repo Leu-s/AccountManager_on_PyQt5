@@ -20,9 +20,31 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
 
         self.pushButton_Generate_pswd.clicked.connect(self.generate_strong_password)  # Кнопка генерации нового пароля
         self.radioButton_default_symbols.toggled.connect(self.on_off_all_buttons_in_generate_password)
-        self.btn_AddNew.clicked.connect(self.add_new_account)
+        self.btn_AddNew.clicked.connect(self.add_new_user)
+
+        self.btn_AddNewAccount.clicked.connect(self.add_new_account)
 
         self.Btn_Login.clicked.connect(self.redirect_btn_login)
+
+    def add_new_account(self):
+        add = self.user.add_new_case(password_to=self.lineEdit_pswd_to.text(),
+                                     login=self.line_login.text(),
+                                     password=self.line_password.text(),
+                                     user_name=self.line_username.text(),
+                                     email=self.line_Email.text())
+        if add:
+            self.label_add_info.setText('Data added successfully!')
+        else:
+            self.label_add_info.setText('No data added =(')
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(msg.Information)
+            msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
+            msg.setWindowTitle('Unknown error')
+            msg.setText('Please check the information.')
+            msg.setInformativeText('INFO:\nApplication length at least 4 characters.\n'
+                                   'Login length is at least 4 characters.\n'
+                                   'Password length at least 6 characters.')
+            msg.exec()
 
     def redirect_btn_login(self):
         """
@@ -129,7 +151,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         self.checkBox_Sym.setChecked(check_status[0])
         self.checkBox_Sym.setEnabled(enable_status[0])
 
-    def add_new_account(self):
+    def add_new_user(self):
         """
         Method for adding a new user in to data base
         """
@@ -181,6 +203,14 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                 msg.setWindowTitle('Successful registration')
                 msg.setText('Congratulations!')
                 msg.setInformativeText('Now log in using your data to open access to all the possibilities =)')
+                msg.exec()
+            else:
+                self.UserStatus.setText(f'A user with this name ({user_name}) already exists '
+                                        f'in the database.\n'
+                                        'Please, try another name.')
+                msg.setWindowTitle('Registration error')
+                msg.setText(f'A user with this name ({user_name}) already exists in the database.')
+                msg.setInformativeText('Please, try another name.')
                 msg.exec()
 
     def generate_strong_password(self):
