@@ -11,10 +11,10 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)
-        user_db = UserAccount.data_base_path
-        self.user_account_db = UserAccount.UserAccountDB(db_path=user_db)
+        data_base = UserAccount.main_db
+        self.user_account_db = UserAccount.UserAccountDB(db_path=data_base)
 
-        self.user = UserAccount.User(db_path=user_db)
+        self.user = UserAccount.User(db_path=data_base)
         if not self.user.access:
             self.change_access_rights()
 
@@ -101,7 +101,8 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
             self.Btn_Login.setText('Log out')
             self.Line_Password.setText('*'*len(self.Line_Password.text()))
             self.UserStatus.setText(f'Welcome, {self.user.login}!\n'
-                                    f'You have {self.user.passwords_amount} accounts.\n'
+                                    # FIX IT LATER
+                                    f'You have ---- accounts.\n'
                                     f'{"Email: "}'
                                     f'{self.user.user_email if self.user.user_email else "Not specified."}')
         elif not status:

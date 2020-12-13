@@ -240,7 +240,7 @@ p, li { white-space: pre-wrap; }
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>Login</string>
+            <string>Login*</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>Password</string>
+            <string>Password*</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -267,36 +267,6 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="text">
             <string>Add</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QCheckBox" name="mathes_login">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Check matches</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QLabel" name="lbl_status">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Adding result</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QRadioButton" name="btn_generate_pswd">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Generate a strong password</string>
            </property>
           </widget>
          </item>
@@ -319,7 +289,7 @@ p, li { white-space: pre-wrap; }
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>Password to</string>
+            <string>Password to*</string>
            </property>
           </widget>
          </item>
@@ -375,23 +345,23 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="6" column="2">
-          <widget class="QRadioButton" name="radioButton">
+         <item row="4" column="2">
+          <widget class="QCheckBox" name="btn_generate_pswd">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>Set default</string>
+            <string>Generate a strong password</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="2">
+         <item row="7" column="2">
           <widget class="QLabel" name="label">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
-            <string>Optional</string>
+            <string>* -  required fields</string>
            </property>
           </widget>
          </item>

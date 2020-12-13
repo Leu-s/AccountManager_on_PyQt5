@@ -2,7 +2,8 @@ import hashlib
 import os
 import sqlite3
 
-data_base_path = os.path.abspath(os.curdir) + '\\data\\user_accounts.db'
+data_path = os.path.abspath(os.curdir)
+main_db = data_path + '\\data\\main.db'
 
 
 class UserAccountDB:
@@ -39,10 +40,20 @@ class UserAccountDB:
         cursor = con_db.cursor()
         result = True
 
+        create_db = """
+                CREATE TABLE IF NOT EXISTS "LoginPassword"(
+                "id_user" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "Login" TEXT NOT NULL UNIQUE,
+                "Password" TEXT NOT NULL);"""
         sql = """
-        INSERT INTO LoginPassword
-        VALUES (?, ?, ?)
-        """
+                INSERT INTO LoginPassword
+                VALUES (?, ?, ?)
+                """
+
+        try:
+            cursor.execute(create_db)
+        except sqlite3.DatabaseError as err:
+            print(err, 'here')
 
         val = (None, login, encrypted_password)  # Total values for transfer to the database
 
@@ -63,10 +74,12 @@ class UserAccountDB:
 class User:
     def __init__(self, db_path):
         self.user_db = db_path
+        self.user_id = None
         self.login = None
         self.user_email = None
         self.access = False
-        self.passwords_amount = 0
+        # self.user_account_db = None
+        # self.passwords_amount = 0
 
     def authorization(self, login, password):
         """Function of user authorization.
@@ -79,10 +92,10 @@ class User:
 
         with con_db:
             cursor = con_db.cursor()
-            cursor.execute("SELECT Login, Password FROM LoginPassword")
+            cursor.execute("SELECT id_user, Login, Password FROM LoginPassword")
             login_password = cursor.fetchall()
 
-        for lgn, psw in login_password:
+        for u_id, lgn, psw in login_password:
             if lgn == login:
                 # Login match, check password
                 salt, key = psw[:32], psw[32:]
@@ -92,6 +105,7 @@ class User:
                     # If the key is correct,
                     # we provide access to the account
                     self.access = True
+                    self.user_id = u_id
                     self.login = login
                     break
 
@@ -99,8 +113,55 @@ class User:
         con_db.close()  # Close the connection
         return self.access
 
+    def connect_db_with_accounts(self):
+
+        create_sql = """
+            CREATE TABLE IF NOT EXISTS "UserData"(
+            "user_id" INTEGER,
+            "PasswordTo" TEXT NOT NULL,
+            "Login"	TEXT NOT NULL,
+            "Password" TEXT NOT NULL,
+            "UserName" TEXT,
+            "Email"	TEXT,
+            "LastModDate" TEXT,
+            FOREIGN KEY (user_id) REFERENCES LoginPassword(id_user)
+            );
+            """
+        insert_values_in_db = """
+                        INSERT INTO 'UserData'
+                        VALUES (?,?,?,?,?,?,?)
+                        """
+        values = (self.user_id,
+                  'tanks',
+                  'TankLogin',
+                  'pswd3124',
+                  'Carpe_Diem',
+                  'em@ail.com',
+                  '12.02.2011')
+        con = sqlite3.connect(self.user_db)
+        with con:
+            cur = con.cursor()
+            cur.execute(create_sql)
+            try:
+                cur.execute(insert_values_in_db, values)
+            except sqlite3.DatabaseError as err:
+                print('Error:', err)
+            else:
+                con.commit()
+        cur.close()
+        con.close()
+
     def __repr__(self):
         return f'User name: {self.login}\nAuthorization status: {self.access}'
 
     def __del__(self):
         print(f'{self.login} deleted.')
+
+
+usr_a_db = UserAccountDB(main_db)
+usr_a_db.add_new_user('123qwe', '123qwe')
+
+
+usr = User(main_db)
+usr.authorization('123qwe', '123qwe')
+usr.connect_db_with_accounts()
