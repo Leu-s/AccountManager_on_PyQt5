@@ -13,11 +13,71 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         self.setupUi(self)
         user_db = UserAccount.data_base_path
         self.user_account_db = UserAccount.UserAccountDB(db_path=user_db)
-        self.user_is_authorized = False
+
+        self.user = UserAccount.User(db_path=user_db)
+        if not self.user.access:
+            self.change_access_rights()
 
         self.pushButton_Generate_pswd.clicked.connect(self.generate_strong_password)  # Кнопка генерации нового пароля
         self.radioButton_default_symbols.toggled.connect(self.on_off_all_buttons_in_generate_password)
         self.btn_AddNew.clicked.connect(self.add_new_account)
+
+        self.Btn_Login.clicked.connect(self.authorization)
+
+    def authorization(self):
+        """
+        Authorizing the user.
+        """
+        user_name = self.Line_Login.text()
+        password = self.Line_Password.text()
+
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(msg.Information)
+        msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
+
+        if len(password) + len(user_name) == 0:
+            msg.setWindowTitle('Invalid login or password')
+            msg.setText('Login and password fields are empty.')
+            msg.setInformativeText('INFO: Enter your username and password and try again.\n'
+                                   'If you do not have an account - register.')
+            msg.setDefaultButton(msg.Default)
+            msg.exec_()
+
+        elif len(user_name) not in range(3, 13) or len(password) not in range(6, 26):
+            msg.setWindowTitle('Invalid login or password')
+            msg.setText('Check the spelling of the username and password.')
+            msg.setInformativeText('INFO: Check your keyboard layout and if Caps Lock is off.')
+            msg.exec_()
+
+        else:
+            start = self.user.authorization(login=user_name, password=password)
+            if start:
+                msg.setWindowTitle('Authorization was successful!')
+                msg.setText('Now you have access to all the functionality.')
+                msg.setInformativeText('INFO: Enjoy fast access to all your passwords!')
+                msg.exec_()
+            else:
+                msg.setWindowTitle('Authorization failed')
+                msg.setText('Try again.')
+                msg.setInformativeText('INFO: Check the spelling of the username and password.')
+                msg.exec_()
+
+        return self.change_access_rights() if self.user.access else None
+
+    def change_access_rights(self):
+        """
+        The method changes the user's access rights depending on whether he is authorized or not.
+
+        :param status: authorization status from self.user.access (True or False)
+        """
+        status = self.user.access
+        self.AddNewAccount.setEnabled(status)
+        self.TBL_group_box.setEnabled(status)
+        self.btn_AddNew.setEnabled(False if status else True)
+        if status:
+            self.Btn_Login.setText('Log out')
+        elif not status:
+            self.Btn_Login.setText('Log in')
 
     def on_off_all_buttons_in_generate_password(self):
         """
@@ -46,7 +106,6 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(msg.Information)
         msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
-        msg.resize(50, 500)
 
         if not check_user_name and not check_password[0]:
             msg.setWindowTitle('Invalid login and password')
@@ -75,7 +134,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                 msg.addButton('Cancel', msg.RejectRole)
                 generate_password_btn = msg.addButton('Generate password', msg.ActionRole)
                 msg.setDefaultButton(generate_password_btn)
-                msg.exec_()
+                msg.exec()
                 if msg.clickedButton() == generate_password_btn:
                     self.Line_Password.setText(PasswordManager.create_password(default=True))
 
@@ -87,7 +146,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                 msg.setWindowTitle('Successful registration')
                 msg.setText('Congratulations!')
                 msg.setInformativeText('Now log in using your data to open access to all the possibilities =)')
-                msg.exec_()
+                msg.exec()
 
     def generate_strong_password(self):
         """

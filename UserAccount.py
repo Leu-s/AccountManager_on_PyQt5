@@ -96,7 +96,6 @@ class User:
 
         cursor.close()  # Close the cursor object
         con_db.close()  # Close the connection
-
         return self.access
 
     def __repr__(self):
@@ -104,10 +103,3 @@ class User:
 
     def __del__(self):
         print(f'{self.login} deleted.')
-
-
-usr = User(data_base_path)
-
-print(usr.authorization('123qwe', '123qwe'))
-
-print(usr)

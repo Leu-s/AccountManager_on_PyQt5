@@ -181,7 +181,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QGroupBox" name="AddNewAccount">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="maximumSize">
         <size>
@@ -205,7 +205,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="1">
           <widget class="QLineEdit" name="line_login">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="maximumSize">
             <size>
@@ -221,7 +221,7 @@ p, li { white-space: pre-wrap; }
          <item row="4" column="1">
           <widget class="QLineEdit" name="line_password">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="maximumSize">
             <size>
@@ -237,7 +237,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="0">
           <widget class="QLabel" name="lbl_login">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Login</string>
@@ -250,7 +250,7 @@ p, li { white-space: pre-wrap; }
          <item row="4" column="0">
           <widget class="QLabel" name="lbl_password">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Password</string>
@@ -263,7 +263,7 @@ p, li { white-space: pre-wrap; }
          <item row="7" column="0" colspan="2">
           <widget class="QPushButton" name="btn_AddNewAccount">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Add</string>
@@ -273,7 +273,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="2">
           <widget class="QCheckBox" name="mathes_login">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Check matches</string>
@@ -283,7 +283,7 @@ p, li { white-space: pre-wrap; }
          <item row="7" column="2">
           <widget class="QLabel" name="lbl_status">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Adding result</string>
@@ -293,7 +293,7 @@ p, li { white-space: pre-wrap; }
          <item row="4" column="2">
           <widget class="QRadioButton" name="btn_generate_pswd">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Generate a strong password</string>
@@ -303,7 +303,7 @@ p, li { white-space: pre-wrap; }
          <item row="6" column="0">
           <widget class="QLabel" name="lbl_Email">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Email</string>
@@ -316,7 +316,7 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="0">
           <widget class="QLabel" name="label_pswd_to">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Password to</string>
@@ -326,17 +326,20 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="1">
           <widget class="QLineEdit" name="lineEdit_pswd_to">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>worldoftanks.ru/</string>
+           </property>
+           <property name="dragEnabled">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
          <item row="6" column="1">
           <widget class="QLineEdit" name="line_Email">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>LeusNazarii@gmail.com</string>
@@ -346,7 +349,7 @@ p, li { white-space: pre-wrap; }
          <item row="5" column="0">
           <widget class="QLabel" name="lbl_username">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>User name</string>
@@ -359,7 +362,7 @@ p, li { white-space: pre-wrap; }
          <item row="5" column="1">
           <widget class="QLineEdit" name="line_username">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="maximumSize">
             <size>
@@ -375,7 +378,7 @@ p, li { white-space: pre-wrap; }
          <item row="6" column="2">
           <widget class="QRadioButton" name="radioButton">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Set default</string>
@@ -385,7 +388,7 @@ p, li { white-space: pre-wrap; }
          <item row="5" column="2">
           <widget class="QLabel" name="label">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Optional</string>
@@ -555,10 +558,16 @@ p, li { white-space: pre-wrap; }
       <layout class="QVBoxLayout" name="TPL_Main">
        <item>
         <widget class="QGroupBox" name="TBL_group_box">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="title">
           <string>Table parameters</string>
          </property>
          <widget class="QWidget" name="gridLayoutWidget_3">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -571,7 +580,7 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="ShowPswrd">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Show passwords</string>
@@ -581,7 +590,7 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="0">
             <widget class="QCheckBox" name="ShowLogins">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Show logins</string>
@@ -591,7 +600,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="0">
             <widget class="QCheckBox" name="ShowEmails">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Show Emails</string>
@@ -601,7 +610,7 @@ p, li { white-space: pre-wrap; }
            <item row="2" column="0">
             <widget class="QCheckBox" name="ShowDate">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Show date of last changes</string>
@@ -611,7 +620,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="1">
             <widget class="QCheckBox" name="ShowUsrNames">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Show user names</string>
@@ -621,7 +630,7 @@ p, li { white-space: pre-wrap; }
            <item row="2" column="1">
             <widget class="QPushButton" name="btn_Apply">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Apply</string>
