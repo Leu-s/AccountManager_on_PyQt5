@@ -6,7 +6,7 @@ numbers = '1234567890'
 specially_symbols = '_____'
 
 
-def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symbols=False):
+def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symbols=False, default=False):
     """
     The function allows you to generate passwords with the specified parameters.
 
@@ -15,11 +15,15 @@ def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symb
     :param low_reg: Lowercase characters
     :param high_reg: Uppercase characters
     :param s_symbols: Special symbols
+    :param default: Set all variables True
     :return: Ready password in string format
     """
 
     global low_register, high_register, numbers, specially_symbols
     password = []
+
+    if default:
+        low_reg = high_reg = num = s_symbols = True
 
     # Creating the list with valid characters
     valid_characters = [symbol for symbol in low_register if low_reg],\

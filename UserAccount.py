@@ -72,6 +72,3 @@ class UserAccountDB:
         con_db.close()  # Close the connection
 
         return result
-
-
-

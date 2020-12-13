@@ -43,19 +43,51 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         check_user_name = PasswordManager.check_correct_username(user_name)
         check_password = PasswordManager.password_security_check(password)
 
-        if not check_user_name:
-            self.Line_Login.setText('Valid parameters: length > 3, A-Z, a-z, 0-9, _ ')
-        if not check_password[0]:
-            self.Line_Password.setText('Password is not correct, try this: ' + check_password[1])
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(msg.Information)
+        msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
+        msg.resize(50, 500)
+
+        if not check_user_name and not check_password[0]:
+            msg.setWindowTitle('Invalid login and password')
+            msg.setText('Generate password automatically?')
+            msg.setInformativeText('INFO: Valid characters: 0-9, A-Z, a-z, _\nLogin: 3 < length < 13\n'
+                                   'Password: 6 < length < 26')
+            msg.addButton('Cancel', msg.RejectRole)
+            generate_password_btn = msg.addButton('Generate password', msg.ActionRole)
+            msg.setDefaultButton(generate_password_btn)
+            msg.exec()
+
+            if msg.clickedButton() == generate_password_btn:
+                self.Line_Password.setText(PasswordManager.create_password(default=True))
+
+        elif check_user_name or check_password[0]:
+            if not check_user_name:
+                msg.setWindowTitle('Invalid login')
+                msg.setText('Try again.')
+                msg.setInformativeText('INFO: Valid characters: 0-9, A-Z, a-z, _\n3 < length < 13')
+                msg.exec()
+
+            elif not check_password[0]:
+                msg.setWindowTitle('Invalid password')
+                msg.setText('INFO: Valid characters: 0-9, A-Z, a-z, _')
+                msg.setInformativeText('Generate password automatically?')
+                msg.addButton('Cancel', msg.RejectRole)
+                generate_password_btn = msg.addButton('Generate password', msg.ActionRole)
+                msg.setDefaultButton(generate_password_btn)
+                msg.exec_()
+                if msg.clickedButton() == generate_password_btn:
+                    self.Line_Password.setText(PasswordManager.create_password(default=True))
 
         if check_password[0] and check_user_name:
             add = self.user_account_db.add_new_user(login=user_name, password=password)
             if add:
                 self.UserStatus.setText(f'The user ({user_name}) has been successfully added to the database.\n'
                                         'Sign in to your account.')
-            else:
-                self.Line_Login.setText('Unknown error, user not added.')
-                self.Line_Password.setText('Please, try again.')
+                msg.setWindowTitle('Successful registration')
+                msg.setText('Congratulations!')
+                msg.setInformativeText('Now log in using your data to open access to all the possibilities =)')
+                msg.exec_()
 
     def generate_strong_password(self):
         """
