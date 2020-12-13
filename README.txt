@@ -1,4 +1,4 @@
-![Image alt](https://github.com/Leu-s/AccountManager_on_PyQt5/static/sc.png)
+![Image alt](https://github.com/Leu-s/AccountManager_on_PyQt5/blob/master/static/sh.png)
 # Password manager
 
 Main functions:
