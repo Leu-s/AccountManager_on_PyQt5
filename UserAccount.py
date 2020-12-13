@@ -66,6 +66,7 @@ class User:
         self.login = None
         self.user_email = None
         self.access = False
+        self.passwords_amount = 0
 
     def authorization(self, login, password):
         """Function of user authorization.

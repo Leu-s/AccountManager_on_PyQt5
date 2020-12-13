@@ -22,7 +22,28 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         self.radioButton_default_symbols.toggled.connect(self.on_off_all_buttons_in_generate_password)
         self.btn_AddNew.clicked.connect(self.add_new_account)
 
-        self.Btn_Login.clicked.connect(self.authorization)
+        self.Btn_Login.clicked.connect(self.redirect_btn_login)
+
+    def redirect_btn_login(self):
+        """
+        Redirect the program to functions self.authorization() or change_access_rights
+        depending on the user's authorization status.
+        If the user was logged in, log out of the account.
+        """
+        if not self.user.access:
+            self.authorization()
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(msg.Information)
+            msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
+            msg.setWindowTitle('Confirm exit')
+            msg.setText('Are you sure you want to log out of your account?')
+            msg.addButton('Cancel', msg.RejectRole)
+            ok_btn = msg.addButton('OK', msg.AcceptRole)
+            msg.exec_()
+            if msg.clickedButton() == ok_btn:
+                self.user.access = False
+                self.change_access_rights()
 
     def authorization(self):
         """
@@ -66,18 +87,31 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
 
     def change_access_rights(self):
         """
-        The method changes the user's access rights depending on whether he is authorized or not.
-
-        :param status: authorization status from self.user.access (True or False)
+        The method changes the user's access rights
+        depending on whether he is authorized or not.
         """
         status = self.user.access
         self.AddNewAccount.setEnabled(status)
         self.TBL_group_box.setEnabled(status)
         self.btn_AddNew.setEnabled(False if status else True)
         if status:
+            self.Line_Login.setEnabled(False if status else True)
+            self.Line_Password.setEnabled(False if status else True)
+            self.Btn_Login.setEnabled(status)
             self.Btn_Login.setText('Log out')
+            self.Line_Password.setText('*'*len(self.Line_Password.text()))
+            self.UserStatus.setText(f'Welcome, {self.user.login}!\n'
+                                    f'You have {self.user.passwords_amount} accounts.\n'
+                                    f'{"Email: "}'
+                                    f'{self.user.user_email if self.user.user_email else "Not specified."}')
         elif not status:
+            self.UserInitialization.setEnabled(False if status else True)
+            self.Line_Login.setEnabled(False if status else True)
+            self.Line_Password.setEnabled(False if status else True)
             self.Btn_Login.setText('Log in')
+            self.Btn_Login.setEnabled(False if status else True)
+            self.Line_Password.setText('')
+            self.UserStatus.setText('Sign in to your account')
 
     def on_off_all_buttons_in_generate_password(self):
         """
