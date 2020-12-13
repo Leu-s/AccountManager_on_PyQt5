@@ -42,7 +42,7 @@ class UserAccountDB:
 
         create_db = """
                 CREATE TABLE IF NOT EXISTS "LoginPassword"(
-                "id_user" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "id_user" INTEGER PRIMARY KEY,
                 "Login" TEXT NOT NULL UNIQUE,
                 "Password" TEXT NOT NULL);"""
         sql = """
@@ -113,11 +113,11 @@ class User:
         con_db.close()  # Close the connection
         return self.access
 
-    def connect_db_with_accounts(self):
+    def add_new_case(self):
 
         create_sql = """
             CREATE TABLE IF NOT EXISTS "UserData"(
-            "user_id" INTEGER,
+            "user_id" INTEGER NOT NULL,
             "PasswordTo" TEXT NOT NULL,
             "Login"	TEXT NOT NULL,
             "Password" TEXT NOT NULL,
@@ -159,9 +159,4 @@ class User:
 
 
 usr_a_db = UserAccountDB(main_db)
-usr_a_db.add_new_user('123qwe', '123qwe')
-
-
-usr = User(main_db)
-usr.authorization('123qwe', '123qwe')
-usr.connect_db_with_accounts()
+usr_a_db.add_new_user('qweasd', '123qwe')
