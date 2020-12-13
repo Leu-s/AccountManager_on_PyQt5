@@ -2,20 +2,7 @@ import hashlib
 import os
 import sqlite3
 
-# salt_from_storage = salt + key
-# salt_from_storage = salt[:32]
-# key_from_storage = key[32:]
-
-
-class User:
-    def __init__(self, login, password):
-        self.login = login
-        self.password = password
-        self.user_email = None
-        self.access = False
-
-    def __repr__(self):
-        return self.login + ' '.join([self.user_email if self.user_email else 'User email not specified.'])
+data_base_path = os.path.abspath(os.curdir) + '\\data\\user_accounts.db'
 
 
 class UserAccountDB:
@@ -24,9 +11,8 @@ class UserAccountDB:
     about users in the database (Logins and passwords).
     Namely, add, change, edit passwords, logins, etc.
     """
-    def __init__(self):
-        self.path_to_db = \
-            "C:\\Users\\Leus\\Desktop\\Different programs\\Py Programs\\Менеджер паролей\\data\\user_accounts.db"
+    def __init__(self, db_path):
+        self.path_to_db = db_path
 
     def add_new_user(self, login, password):
         """
@@ -46,10 +32,10 @@ class UserAccountDB:
             100000,                     # It is recommended to use at least 100,000 SHA-256 iterations
             dklen=128
         )
-        encrypted_password = str(salt + key)
+        encrypted_password = salt + key
 
         # We connect the database and add a new user to it
-        con_db = sqlite3.connect(self.path_to_db)
+        con_db = sqlite3.connect(self.path_to_db, timeout=10)
         cursor = con_db.cursor()
         result = True
 
@@ -72,3 +58,56 @@ class UserAccountDB:
         con_db.close()  # Close the connection
 
         return result
+
+
+class User:
+    def __init__(self, db_path):
+        self.user_db = db_path
+        self.login = None
+        self.user_email = None
+        self.access = False
+
+    def authorization(self, login, password):
+        """Function of user authorization.
+
+        :param login (str) - user login
+        :param password (str) - user password
+        :return True or False, depending on the result.
+        """
+        con_db = sqlite3.connect(self.user_db, timeout=10)
+
+        with con_db:
+            cursor = con_db.cursor()
+            cursor.execute("SELECT Login, Password FROM LoginPassword")
+            login_password = cursor.fetchall()
+
+        for lgn, psw in login_password:
+            if lgn == login:
+                # Login match, check password
+                salt, key = psw[:32], psw[32:]
+                new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000, dklen=128)
+
+                if key == new_key:
+                    # If the key is correct,
+                    # we provide access to the account
+                    self.access = True
+                    self.login = login
+                    break
+
+        cursor.close()  # Close the cursor object
+        con_db.close()  # Close the connection
+
+        return self.access
+
+    def __repr__(self):
+        return f'User name: {self.login}\nAuthorization status: {self.access}'
+
+    def __del__(self):
+        print(f'{self.login} deleted.')
+
+
+usr = User(data_base_path)
+
+print(usr.authorization('123qwe', '123qwe'))
+
+print(usr)

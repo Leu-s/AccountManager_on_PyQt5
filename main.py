@@ -11,8 +11,8 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)
-
-        self.user_account_db = UserAccount.UserAccountDB()
+        user_db = UserAccount.data_base_path
+        self.user_account_db = UserAccount.UserAccountDB(db_path=user_db)
         self.user_is_authorized = False
 
         self.pushButton_Generate_pswd.clicked.connect(self.generate_strong_password)  # Кнопка генерации нового пароля
