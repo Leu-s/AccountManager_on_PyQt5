@@ -214,7 +214,7 @@ p, li { white-space: pre-wrap; }
             </size>
            </property>
            <property name="text">
-            <string>LeusNazarii@gmail.com</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -230,7 +230,7 @@ p, li { white-space: pre-wrap; }
             </size>
            </property>
            <property name="text">
-            <string>529984073_Nazar1998</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -299,7 +299,7 @@ p, li { white-space: pre-wrap; }
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>worldoftanks.ru/</string>
+            <string/>
            </property>
            <property name="dragEnabled">
             <bool>false</bool>
@@ -312,7 +312,7 @@ p, li { white-space: pre-wrap; }
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>LeusNazarii@gmail.com</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -341,7 +341,7 @@ p, li { white-space: pre-wrap; }
             </size>
            </property>
            <property name="text">
-            <string>Carpe_Diem</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -508,7 +508,7 @@ p, li { white-space: pre-wrap; }
          <item row="4" column="2">
           <widget class="QLineEdit" name="lineEdit_Ready_Pass">
            <property name="text">
-            <string>UUjsdf_Difj3</string>
+            <string/>
            </property>
            <property name="readOnly">
             <bool>true</bool>
