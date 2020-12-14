@@ -143,7 +143,7 @@ class User:
                   password,
                   user_name,
                   email,
-                  datetime.datetime.now())
+                  datetime.datetime.strftime(datetime.datetime.now(), "%Y.%m.%d %H:%M:%S"))
 
         con = sqlite3.connect(self.user_db)
         with con:

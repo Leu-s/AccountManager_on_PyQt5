@@ -562,6 +562,9 @@ p, li { white-space: pre-wrap; }
              <property name="text">
               <string>Show passwords</string>
              </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="0" column="0">
@@ -571,6 +574,9 @@ p, li { white-space: pre-wrap; }
              </property>
              <property name="text">
               <string>Show logins</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -582,6 +588,9 @@ p, li { white-space: pre-wrap; }
              <property name="text">
               <string>Show Emails</string>
              </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="2" column="0">
@@ -592,6 +601,9 @@ p, li { white-space: pre-wrap; }
              <property name="text">
               <string>Show date of last changes</string>
              </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="1" column="1">
@@ -601,6 +613,9 @@ p, li { white-space: pre-wrap; }
              </property>
              <property name="text">
               <string>Show user names</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -637,11 +652,14 @@ p, li { white-space: pre-wrap; }
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="contextMenuPolicy">
-        <enum>Qt::DefaultContextMenu</enum>
+        <enum>Qt::ActionsContextMenu</enum>
        </property>
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>

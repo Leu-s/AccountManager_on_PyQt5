@@ -1,6 +1,5 @@
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 import sys
-import time
 import PasswordManager
 import UserAccount
 
@@ -18,17 +17,13 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         if not self.user.access:
             self.change_access_rights()
 
+        self.btn_AddNew.clicked.connect(self.add_new_user)
+        self.btn_Apply.clicked.connect(self.fill_in_the_table)
+        self.Btn_Login.clicked.connect(self.redirect_btn_login)
+        self.btn_AddNewAccount.clicked.connect(self.add_new_account)
+        self.btn_generate_pswd.clicked.connect(self.new_acc_gen_pswd_btn)
         self.pushButton_Generate_pswd.clicked.connect(self.generate_strong_password)  # Кнопка генерации нового пароля
         self.radioButton_default_symbols.toggled.connect(self.on_off_all_buttons_in_generate_password)
-        self.btn_AddNew.clicked.connect(self.add_new_user)
-
-        self.btn_Apply.clicked.connect(self.fill_in_the_table)
-
-        self.btn_AddNewAccount.clicked.connect(self.add_new_account)
-
-        self.Btn_Login.clicked.connect(self.redirect_btn_login)
-
-        self.btn_generate_pswd.clicked.connect(self.new_acc_gen_pswd_btn)
 
     def new_acc_gen_pswd_btn(self):
         """
@@ -49,18 +44,31 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         # Clearing the table
         [self.tableWidget.removeRow(i) for i in reversed(range(self.tableWidget.rowCount()))]
 
+        s_login = self.ShowLogins.isChecked()
+        s_email = self.ShowEmails.isChecked()
+        s_pswd = self.ShowPswrd.isChecked()
+        s_usr_name = self.ShowUsrNames.isChecked()
+        s_date = self.ShowDate.isChecked()
+
         # We receive information from the database for filling
         data = self.user.output_user_data_from_table()
 
         if data:
             for item in data:
                 self.tableWidget.insertRow(0)
-                self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem(str(item[0])))
-                self.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(str(item[1])))
-                self.tableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem(str(item[2])))
-                self.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(item[3])))
-                self.tableWidget.setItem(0, 4, QtWidgets.QTableWidgetItem(str(item[4])))
-                self.tableWidget.setItem(0, 5, QtWidgets.QTableWidgetItem(str(item[5])))
+                self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem(item[0]))
+                self.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(item[1] if s_login else None))
+                self.tableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem(item[2] if s_pswd else None))
+                self.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(item[3] if s_usr_name else None))
+                self.tableWidget.setItem(0, 4, QtWidgets.QTableWidgetItem(item[4] if s_email else None))
+                self.tableWidget.setItem(0, 5, QtWidgets.QTableWidgetItem(item[5] if s_date else None))
+            else:
+                self.tableWidget.setColumnHidden(1, True if not s_login else False)
+                self.tableWidget.setColumnHidden(2, True if not s_pswd else False)
+                self.tableWidget.setColumnHidden(3, True if not s_usr_name else False)
+                self.tableWidget.setColumnHidden(4, True if not s_email else False)
+                self.tableWidget.setColumnHidden(5, True if not s_date else False)
+                self.tableWidget.resizeColumnsToContents()
 
     def add_new_account(self):
         """
@@ -87,7 +95,6 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                                    'Login length is at least 4 characters.\n'
                                    'Password length at least 6 characters.')
             msg.exec()
-
 
     def redirect_btn_login(self):
         """
