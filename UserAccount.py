@@ -79,6 +79,7 @@ class User:
         self.login = None
         self.user_email = None
         self.access = False
+        self.create_used_data_db()
         # self.user_account_db = None
         # self.passwords_amount = 0
 
@@ -114,6 +115,26 @@ class User:
         con_db.close()  # Close the connection
         return self.access
 
+    def create_used_data_db(self):
+        create_sql = """
+                    CREATE TABLE IF NOT EXISTS "UserData"(
+                    "user_id" INTEGER NOT NULL,
+                    "PasswordTo" TEXT NOT NULL,
+                    "Login"	TEXT NOT NULL,
+                    "Password" TEXT NOT NULL,
+                    "UserName" TEXT,
+                    "Email"	TEXT,
+                    "LastModDate" TEXT,
+                    FOREIGN KEY (user_id) REFERENCES LoginPassword(id_user)
+                    );
+                    """
+        con = sqlite3.connect(main_db)
+        cur = con.cursor()
+        cur.execute(create_sql)
+        cur.close()
+        con.close()
+
+
     def add_new_case(self, password_to, login, password, user_name=None, email=None):
 
         if len(password_to) < 4 or len(login) < 4 or len(password) < 6:
@@ -121,18 +142,6 @@ class User:
 
         result = True
 
-        create_sql = """
-            CREATE TABLE IF NOT EXISTS "UserData"(
-            "user_id" INTEGER NOT NULL,
-            "PasswordTo" TEXT NOT NULL,
-            "Login"	TEXT NOT NULL,
-            "Password" TEXT NOT NULL,
-            "UserName" TEXT,
-            "Email"	TEXT,
-            "LastModDate" TEXT,
-            FOREIGN KEY (user_id) REFERENCES LoginPassword(id_user)
-            );
-            """
         insert_values_in_db = """
                         INSERT INTO 'UserData'
                         VALUES (?,?,?,?,?,?,?)
@@ -148,7 +157,6 @@ class User:
         con = sqlite3.connect(self.user_db)
         with con:
             cur = con.cursor()
-            cur.execute(create_sql)
             try:
                 cur.execute(insert_values_in_db, values)
             except sqlite3.DatabaseError as err:
