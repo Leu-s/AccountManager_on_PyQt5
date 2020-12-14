@@ -650,20 +650,8 @@ p, li { white-space: pre-wrap; }
         <bool>false</bool>
        </property>
        <property name="rowCount">
-        <number>12</number>
+        <number>0</number>
        </property>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
-       <row/>
        <column>
         <property name="text">
          <string>Password to</string>

@@ -22,11 +22,52 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         self.radioButton_default_symbols.toggled.connect(self.on_off_all_buttons_in_generate_password)
         self.btn_AddNew.clicked.connect(self.add_new_user)
 
+        self.btn_Apply.clicked.connect(self.fill_in_the_table)
+
         self.btn_AddNewAccount.clicked.connect(self.add_new_account)
 
         self.Btn_Login.clicked.connect(self.redirect_btn_login)
 
+        self.btn_generate_pswd.clicked.connect(self.new_acc_gen_pswd_btn)
+
+    def new_acc_gen_pswd_btn(self):
+        """
+        The method fills in the password automatically
+        if the flag is set.
+        """
+        if self.btn_generate_pswd.isChecked():
+            self.line_password.setText(PasswordManager.create_password(default=True))
+            self.line_password.setEnabled(False)
+        else:
+            self.line_password.setEnabled(True)
+
+    def fill_in_the_table(self):
+        """
+        The method fills the table in the application.
+        Clears it before filling.
+        """
+        # Clearing the table
+        [self.tableWidget.removeRow(i) for i in reversed(range(self.tableWidget.rowCount()))]
+
+        # We receive information from the database for filling
+        data = self.user.output_user_data_from_table()
+
+        if data:
+            for item in data:
+                self.tableWidget.insertRow(0)
+                self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem(str(item[0])))
+                self.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(str(item[1])))
+                self.tableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem(str(item[2])))
+                self.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(item[3])))
+                self.tableWidget.setItem(0, 4, QtWidgets.QTableWidgetItem(str(item[4])))
+                self.tableWidget.setItem(0, 5, QtWidgets.QTableWidgetItem(str(item[5])))
+
     def add_new_account(self):
+        """
+        Method of adding a new account by the user. There are notifications
+        about the result of the operation.
+        """
+
         add = self.user.add_new_case(password_to=self.lineEdit_pswd_to.text(),
                                      login=self.line_login.text(),
                                      password=self.line_password.text(),
@@ -34,6 +75,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                                      email=self.line_Email.text())
         if add:
             self.label_add_info.setText('Data added successfully!')
+            self.fill_in_the_table()
         else:
             self.label_add_info.setText('No data added =(')
             msg = QtWidgets.QMessageBox()
@@ -45,6 +87,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                                    'Login length is at least 4 characters.\n'
                                    'Password length at least 6 characters.')
             msg.exec()
+
 
     def redirect_btn_login(self):
         """
@@ -117,9 +160,11 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         self.TBL_group_box.setEnabled(status)
         self.btn_AddNew.setEnabled(False if status else True)
         if status:
+            self.fill_in_the_table()
             self.Line_Login.setEnabled(False if status else True)
             self.Line_Password.setEnabled(False if status else True)
             self.Btn_Login.setEnabled(status)
+            self.tableWidget.setEnabled(status)
             self.Btn_Login.setText('Log out')
             self.Line_Password.setText('*'*len(self.Line_Password.text()))
             self.UserStatus.setText(f'Welcome, {self.user.login}!\n'
@@ -128,6 +173,8 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                                     f'{"Email: "}'
                                     f'{self.user.user_email if self.user.user_email else "Not specified."}')
         elif not status:
+            [self.tableWidget.removeRow(i) for i in reversed(range(self.tableWidget.rowCount()))]
+            self.tableWidget.setEnabled(status)
             self.UserInitialization.setEnabled(False if status else True)
             self.Line_Login.setEnabled(False if status else True)
             self.Line_Password.setEnabled(False if status else True)
@@ -221,7 +268,6 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         if self.checkBox_0_9.isChecked() == self.checkBox_a_z.isChecked() \
                 == self.checkBox_A_Z.isChecked is False:
             self.checkBox_Sym.setChecked(True)
-            print(self.checkBox_Sym.isChecked())
 
         password = PasswordManager.create_password(s_amount=int(self.symbols_amount.text()),
                                                    num=self.checkBox_0_9.isChecked(),

@@ -160,6 +160,24 @@ class User:
 
         return result
 
+    def output_user_data_from_table(self):
+
+        container = []
+
+        con = sqlite3.connect(main_db)
+        cur = con.cursor()
+        with con:
+            cur.execute("SELECT PasswordTo, Login, Password, UserName, Email, LastModDate, user_id  FROM UserData")
+            all_items = cur.fetchall()
+
+        for pswd_to, lgn, paswd, usrname, email, date, user_id in all_items:
+            if user_id == self.user_id:
+                container.append([pswd_to, lgn, paswd, usrname, email, date])
+        cur.close()
+        con.close()
+        return container
+
+
     def __repr__(self):
         return f'User name: {self.login}\nAuthorization status: {self.access}'
 

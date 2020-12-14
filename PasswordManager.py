@@ -6,7 +6,7 @@ numbers = '1234567890'
 specially_symbols = '_____'
 
 
-def create_password(s_amount=8, num=False, low_reg=False, high_reg=False, s_symbols=False, default=False):
+def create_password(s_amount=14, num=False, low_reg=False, high_reg=False, s_symbols=False, default=False):
     """
     The function allows you to generate passwords with the specified parameters.
 
