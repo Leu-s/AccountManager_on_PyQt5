@@ -41,20 +41,10 @@ class UserAccountDB:
         cursor = con_db.cursor()
         result = True
 
-        create_db = """
-                CREATE TABLE IF NOT EXISTS "LoginPassword"(
-                "id_user" INTEGER PRIMARY KEY,
-                "Login" TEXT NOT NULL UNIQUE,
-                "Password" TEXT NOT NULL);"""
         sql = """
                 INSERT INTO LoginPassword
                 VALUES (?, ?, ?)
                 """
-
-        try:
-            cursor.execute(create_db)
-        except sqlite3.DatabaseError as err:
-            print(err, 'here')
 
         val = (None, login, encrypted_password)  # Total values for transfer to the database
 
@@ -79,8 +69,7 @@ class User:
         self.login = None
         self.user_email = None
         self.access = False
-        self.create_used_data_db()
-        # self.user_account_db = None
+
         # self.passwords_amount = 0
 
     def authorization(self, login, password):
@@ -115,27 +104,7 @@ class User:
         con_db.close()  # Close the connection
         return self.access
 
-    def create_used_data_db(self):
-        create_sql = """
-                    CREATE TABLE IF NOT EXISTS "UserData"(
-                    "user_id" INTEGER NOT NULL,
-                    "PasswordTo" TEXT NOT NULL,
-                    "Login"	TEXT NOT NULL,
-                    "Password" TEXT NOT NULL,
-                    "UserName" TEXT,
-                    "Email"	TEXT,
-                    "LastModDate" TEXT,
-                    FOREIGN KEY (user_id) REFERENCES LoginPassword(id_user)
-                    );
-                    """
-        con = sqlite3.connect(main_db)
-        cur = con.cursor()
-        cur.execute(create_sql)
-        cur.close()
-        con.close()
-
-
-    def add_new_case(self, password_to, login, password, user_name=None, email=None):
+    def add_new_data(self, password_to, login, password, user_name=None, email=None):
 
         if len(password_to) < 4 or len(login) < 4 or len(password) < 6:
             return False
@@ -168,6 +137,26 @@ class User:
 
         return result
 
+    def remove_data_from_db(self, time):
+        """
+        The method removes the specified line from
+        the database.
+
+        :param time: Time of adding a record to the database.
+        :return: True or False
+        """
+        sql = """DELETE FROM UserData WHERE LastModDate = ?"""
+        connect = sqlite3.connect(self.user_db)
+        cursor = connect.cursor()
+        cursor.execute(sql, (time,))
+
+        connect.commit()
+        cursor.close()
+        connect.close()
+        return time
+
+
+
     def output_user_data_from_table(self):
 
         container = []
@@ -185,9 +174,50 @@ class User:
         con.close()
         return container
 
-
     def __repr__(self):
         return f'User name: {self.login}\nAuthorization status: {self.access}'
 
     def __del__(self):
         print(f'{self.login} deleted.')
+
+
+def create_db(db_path):
+    """
+    The function creates a database if it has not been created before.
+    Applies when the application starts.
+
+    :param db_path: path to database
+    """
+
+    create_user_info = """
+            CREATE TABLE IF NOT EXISTS "LoginPassword"(
+            "id_user" INTEGER PRIMARY KEY,
+            "Login" TEXT NOT NULL UNIQUE,
+            "Password" TEXT NOT NULL);"""
+
+    create_user_accounts = """
+            CREATE TABLE IF NOT EXISTS "UserData"(
+            "user_id" INTEGER NOT NULL,
+            "PasswordTo" TEXT NOT NULL,
+            "Login"	TEXT NOT NULL,
+            "Password" TEXT NOT NULL,
+            "UserName" TEXT,
+            "Email"	TEXT,
+            "LastModDate" TEXT,
+            FOREIGN KEY (user_id) REFERENCES LoginPassword(id_user)
+            );
+            """
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+    try:
+        cur.execute(create_user_info)
+    except sqlite3.DatabaseError as err:
+        print('Error: ', err)
+
+    try:
+        cur.execute(create_user_accounts)
+    except sqlite3.DatabaseError as err:
+        print('Error:', err)
+
+    cur.close()
+    con.close()

@@ -11,8 +11,8 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)
         data_base = UserAccount.main_db
+        UserAccount.create_db(data_base)
         self.user_account_db = UserAccount.UserAccountDB(db_path=data_base)
-
         self.user = UserAccount.User(db_path=data_base)
         if not self.user.access:
             self.change_access_rights()
@@ -24,6 +24,65 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         self.btn_generate_pswd.clicked.connect(self.new_acc_gen_pswd_btn)
         self.pushButton_Generate_pswd.clicked.connect(self.generate_strong_password)  # Кнопка генерации нового пароля
         self.radioButton_default_symbols.toggled.connect(self.on_off_all_buttons_in_generate_password)
+
+        #######################
+        self.tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tableWidget.customContextMenuRequested.connect(self.table_context_menu)
+
+    def table_context_menu(self, pos):
+        menu = QtWidgets.QMenu()
+        copy_item = menu.addAction('Copy')
+        edit_item = menu.addAction('Edit line')
+        delete_line = menu.addAction('Delete line')
+
+        edit_item.setEnabled(False)
+        copy_item.setEnabled(False)
+
+        menu.addSeparator()
+
+        action = menu.exec_(QtGui.QCursor.pos())
+        if action == delete_line:
+            self.delete_row(pos)
+
+    def delete_row(self, pos):
+        show_date = False
+        row = self.tableWidget.rowAt(pos.y())
+        if row < 0:
+            return
+        self.tableWidget.selectRow(row)
+
+        if not self.ShowDate.isChecked():
+            self.tableWidget.setColumnHidden(5, False)
+            self.ShowDate.setChecked(True)
+            self.fill_in_the_table()
+            show_date = True
+
+        confirmation = self.msg_delete_row()
+
+        if confirmation:
+            date = self.tableWidget.item(row, 5).text()
+            self.user.remove_data_from_db(date)
+            self.fill_in_the_table()
+
+        if show_date:
+            self.tableWidget.setColumnHidden(5, True)
+            self.ShowDate.setChecked(False)
+
+    def msg_delete_row(self):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(msg.Warning)
+        msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
+        msg.setWindowTitle('Confirm deletion')
+        msg.setText('Are you sure you want to delete the entry?')
+        msg.setInformativeText('INFO: Once deleted, you cannot restore it.')
+        msg.addButton('Cancel', msg.RejectRole)
+        delete_btn = msg.addButton('Delete', msg.AcceptRole)
+        msg.exec()
+        if msg.clickedButton() == delete_btn:
+            return True
+        else:
+            return False
+
 
     def new_acc_gen_pswd_btn(self):
         """
@@ -76,7 +135,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         about the result of the operation.
         """
 
-        add = self.user.add_new_case(password_to=self.lineEdit_pswd_to.text(),
+        add = self.user.add_new_data(password_to=self.lineEdit_pswd_to.text(),
                                      login=self.line_login.text(),
                                      password=self.line_password.text(),
                                      user_name=self.line_username.text(),
