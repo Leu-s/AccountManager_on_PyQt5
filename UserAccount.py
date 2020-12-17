@@ -143,7 +143,7 @@ class User:
 
         insert_values_in_db = """
                         INSERT INTO 'UserData'
-                        VALUES (?,?,?,?,?,?,?)
+                        VALUES (?,?,?,?,?,?,?,?)
                         """
         values = (self.user_id,
                   password_to,
@@ -151,7 +151,8 @@ class User:
                   password,
                   user_name,
                   email,
-                  datetime.datetime.strftime(datetime.datetime.now(), "%Y.%m.%d %H:%M:%S"))
+                  datetime.datetime.strftime(datetime.datetime.now(), "%Y.%m.%d %H:%M:%S"),
+                  None)
 
         con = sqlite3.connect(self.user_db)
         with con:
@@ -167,25 +168,24 @@ class User:
 
         return result
 
-    def remove_data_from_db(self, time):
+    def remove_data_from_db(self, row_id):
         """
         The method removes the specified line from
         the database.
 
-        :param time: Time of adding a record to the database.
+        :param row_id: row id in database.
         :return: True or False
         """
-        sql = """DELETE FROM UserData WHERE LastModDate = ?"""
+        sql = """DELETE FROM UserData WHERE row_id = ?"""
         connect = sqlite3.connect(self.user_db)
         cursor = connect.cursor()
         try:
-            cursor.execute(sql, (time,))
+            cursor.execute(sql, (row_id,))
             connect.commit()
         except sqlite3.DatabaseError as err:
             print("DB-Error: ", err)
         cursor.close()
         connect.close()
-        return time
 
     def output_user_data_from_table(self):
 
@@ -194,12 +194,13 @@ class User:
         con = sqlite3.connect(main_db)
         cur = con.cursor()
         with con:
-            cur.execute("SELECT PasswordTo, Login, Password, UserName, Email, LastModDate, user_id  FROM UserData")
+            cur.execute(
+                "SELECT PasswordTo, Login, Password, UserName, Email, LastModDate, user_id, row_id  FROM UserData")
             all_items = cur.fetchall()
 
-        for pswd_to, lgn, paswd, usrname, email, date, user_id in all_items:
+        for pswd_to, lgn, paswd, usrname, email, date, user_id, row_id in all_items:
             if user_id == self.user_id:
-                container.append([pswd_to, lgn, paswd, usrname, email, date])
+                container.append([pswd_to, lgn, paswd, usrname, email, date, row_id])
         cur.close()
         con.close()
         return container
@@ -234,7 +235,9 @@ def create_db(db_path):
             "UserName" TEXT,
             "Email"	TEXT,
             "LastModDate" TEXT,
-            FOREIGN KEY (user_id) REFERENCES LoginPassword(id_user)
+            "row_id" INTEGER NOT NULL,
+            FOREIGN KEY ("user_id") REFERENCES "LoginPassword"("id_user"),
+            PRIMARY KEY ("row_id" AUTOINCREMENT)
             );
             """
     con = sqlite3.connect(db_path)

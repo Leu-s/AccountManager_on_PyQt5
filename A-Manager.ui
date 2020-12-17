@@ -722,6 +722,11 @@ p, li { white-space: pre-wrap; }
          <set>AlignCenter</set>
         </property>
        </column>
+       <column>
+        <property name="text">
+         <string>row_id</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>

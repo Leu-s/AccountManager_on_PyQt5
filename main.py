@@ -46,28 +46,23 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
 
     def delete_row(self, pos):
         """Record deletion method."""
-        show_date = False
         row = self.tableWidget.rowAt(pos.y())
         if row < 0:
             return
+
         self.tableWidget.selectRow(row)
 
-        if not self.ShowDate.isChecked():
-            self.tableWidget.setColumnHidden(5, False)
-            self.ShowDate.setChecked(True)
-            self.fill_in_the_table()
-            show_date = True
+        self.fill_in_the_table(row_id=True)
 
+        row_id = self.tableWidget.item(row, 6).text()
+
+        self.fill_in_the_table(row_id=False)
+        
         confirmation = self.msg_delete_row()
 
         if confirmation:
-            date = self.tableWidget.item(row, 5).text()
-            self.user.remove_data_from_db(date)
+            self.user.remove_data_from_db(int(row_id))
             self.fill_in_the_table()
-
-        if show_date:
-            self.tableWidget.setColumnHidden(5, True)
-            self.ShowDate.setChecked(False)
 
     def msg_delete_row(self):
         """Window for user confirmation of record deletion"""
@@ -96,7 +91,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         else:
             self.line_password.setEnabled(True)
 
-    def fill_in_the_table(self):
+    def fill_in_the_table(self, row_id=False):
         """
         The method fills the table in the application.
         Clears it before filling.
@@ -112,7 +107,6 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
 
         # We receive information from the database for filling
         data = self.user.output_user_data_from_table()
-
         if data:
             for item in data:
                 self.tableWidget.insertRow(0)
@@ -122,12 +116,14 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                 self.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(item[3] if s_usr_name else None))
                 self.tableWidget.setItem(0, 4, QtWidgets.QTableWidgetItem(item[4] if s_email else None))
                 self.tableWidget.setItem(0, 5, QtWidgets.QTableWidgetItem(item[5] if s_date else None))
+                self.tableWidget.setItem(0, 6, QtWidgets.QTableWidgetItem(str(item[6])) if row_id else None)
             else:
                 self.tableWidget.setColumnHidden(1, True if not s_login else False)
                 self.tableWidget.setColumnHidden(2, True if not s_pswd else False)
                 self.tableWidget.setColumnHidden(3, True if not s_usr_name else False)
                 self.tableWidget.setColumnHidden(4, True if not s_email else False)
                 self.tableWidget.setColumnHidden(5, True if not s_date else False)
+                self.tableWidget.setColumnHidden(6, True if not row_id else False)
                 self.tableWidget.resizeColumnsToContents()
 
     def add_new_account(self):

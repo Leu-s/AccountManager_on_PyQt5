@@ -3,3 +3,5 @@ __pycache__
 *.txt
 *.db
 dist/
+A-Manager_1.0/
+*.spec
