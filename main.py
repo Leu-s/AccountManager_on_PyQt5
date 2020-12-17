@@ -45,6 +45,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
             self.delete_row(pos)
 
     def delete_row(self, pos):
+        """Record deletion method."""
         show_date = False
         row = self.tableWidget.rowAt(pos.y())
         if row < 0:
@@ -69,6 +70,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
             self.ShowDate.setChecked(False)
 
     def msg_delete_row(self):
+        """Window for user confirmation of record deletion"""
         msg = QtWidgets.QMessageBox()
         msg.setIcon(msg.Warning)
         msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
@@ -82,7 +84,6 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
             return True
         else:
             return False
-
 
     def new_acc_gen_pswd_btn(self):
         """
