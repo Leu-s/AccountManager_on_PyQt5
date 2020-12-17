@@ -136,6 +136,18 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         about the result of the operation.
         """
 
+        if self.checkMatches.isChecked():
+            matches = self.user.check_matches(pswd_to=self.lineEdit_pswd_to.text(),
+                                              login=self.line_login.text(),
+                                              pswd=self.line_password.text(),
+                                              usr_name=self.line_username.text(),
+                                              email=self.line_Email.text())
+            if matches:
+                confirmation = self.msg_check_matches()
+                if not confirmation:
+                    self.label_add_info.setText('Operation canceled by user.')
+                    return
+
         add = self.user.add_new_data(password_to=self.lineEdit_pswd_to.text(),
                                      login=self.line_login.text(),
                                      password=self.line_password.text(),
@@ -155,6 +167,21 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
                                    'Login length is at least 4 characters.\n'
                                    'Password length at least 6 characters.')
             msg.exec()
+
+    def msg_check_matches(self):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(msg.Warning)
+        msg.setWindowIcon(QtGui.QIcon('\\static\\icon.png'))
+        msg.setWindowTitle('Found a match')
+        msg.setText('What are you going to do?')
+        msg.setInformativeText('INFO: You can add an entry or cancel the operation.')
+        msg.addButton('Cancel', msg.RejectRole)
+        confirm_btn = msg.addButton('Confirm', msg.AcceptRole)
+        msg.exec()
+        if msg.clickedButton() == confirm_btn:
+            return True
+        else:
+            return False
 
     def redirect_btn_login(self):
         """

@@ -13,6 +13,7 @@ class UserAccountDB:
     about users in the database (Logins and passwords).
     Namely, add, change, edit passwords, logins, etc.
     """
+
     def __init__(self, db_path):
         self.path_to_db = db_path
 
@@ -28,10 +29,10 @@ class UserAccountDB:
         """
         salt = os.urandom(32)
         key = hashlib.pbkdf2_hmac(
-            'sha256',                   # Hash algorithm used
-            password.encode('utf-8'),   # Convert password to bytes
-            salt,                       # Salt provided
-            100000,                     # It is recommended to use at least 100,000 SHA-256 iterations
+            'sha256',  # Hash algorithm used
+            password.encode('utf-8'),  # Convert password to bytes
+            salt,  # Salt provided
+            100000,  # It is recommended to use at least 100,000 SHA-256 iterations
             dklen=128
         )
         encrypted_password = salt + key
@@ -104,6 +105,35 @@ class User:
         con_db.close()  # Close the connection
         return self.access
 
+    def check_matches(self, pswd_to, login, pswd, usr_name, email):
+        """
+        the method checks if a record
+        with the same values is in the database.
+
+        :return: True or False
+        """
+        sql = "SELECT user_id, PasswordTo, Login, Password, UserName, Email FROM UserData"
+        connect = sqlite3.connect(self.user_db)
+        cursor = connect.cursor()
+        try:
+            cursor.execute(sql)
+        except sqlite3.DatabaseError as err:
+            print("DB-Error: ", err)
+        data = cursor.fetchall()
+
+        cursor.close()
+        connect.close()
+
+        for i in data:
+            if (i[1], i[2], i[3]) == (pswd_to, login, pswd):
+                return True
+            elif i[0] == self.user_id:
+                if pswd_to == i[1] and login == i[2] and pswd == i[3] \
+                        and usr_name == i[4] and email == i[5]:
+                    return True
+        else:
+            return False
+
     def add_new_data(self, password_to, login, password, user_name=None, email=None):
 
         if len(password_to) < 4 or len(login) < 4 or len(password) < 6:
@@ -148,14 +178,14 @@ class User:
         sql = """DELETE FROM UserData WHERE LastModDate = ?"""
         connect = sqlite3.connect(self.user_db)
         cursor = connect.cursor()
-        cursor.execute(sql, (time,))
-
-        connect.commit()
+        try:
+            cursor.execute(sql, (time,))
+            connect.commit()
+        except sqlite3.DatabaseError as err:
+            print("DB-Error: ", err)
         cursor.close()
         connect.close()
         return time
-
-
 
     def output_user_data_from_table(self):
 

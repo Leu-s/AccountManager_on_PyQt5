@@ -260,16 +260,6 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="7" column="0" colspan="2">
-          <widget class="QPushButton" name="btn_AddNewAccount">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Add</string>
-           </property>
-          </widget>
-         </item>
          <item row="6" column="0">
           <widget class="QLabel" name="lbl_Email">
            <property name="enabled">
@@ -365,10 +355,27 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="7" column="2">
+         <item row="7" column="0" colspan="2">
+          <widget class="QPushButton" name="btn_AddNewAccount">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Add</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
           <widget class="QLabel" name="label_add_info">
            <property name="text">
             <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkMatches">
+           <property name="text">
+            <string>Check matches</string>
            </property>
           </widget>
          </item>
