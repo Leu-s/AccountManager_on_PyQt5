@@ -57,7 +57,7 @@ class AccountManager(QtWidgets.QMainWindow, ui_form):
         row_id = self.tableWidget.item(row, 6).text()
 
         self.fill_in_the_table(row_id=False)
-        
+        self.tableWidget.selectRow(row)
         confirmation = self.msg_delete_row()
 
         if confirmation:

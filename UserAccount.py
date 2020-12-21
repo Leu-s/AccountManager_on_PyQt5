@@ -1,10 +1,15 @@
 import hashlib
+import rsa
+import keys
 import os
 import sqlite3
 import datetime
 
 data_path = os.path.abspath(os.curdir)
 main_db = data_path + '\\data\\main.db'
+
+public_key = keys.get_public_key()
+private_key = keys.get_private_key()
 
 
 class UserAccountDB:
@@ -125,11 +130,17 @@ class User:
         connect.close()
 
         for i in data:
-            if (i[1], i[2], i[3]) == (pswd_to, login, pswd):
-                return True
-            elif i[0] == self.user_id:
-                if pswd_to == i[1] and login == i[2] and pswd == i[3] \
-                        and usr_name == i[4] and email == i[5]:
+            p_to = rsa.decrypt(i[1], private_key).decode('utf-8')
+            lgn = rsa.decrypt(i[2], private_key).decode('utf-8')
+            psw = rsa.decrypt(i[3], private_key).decode('utf-8')
+            u_name = rsa.decrypt(i[4], private_key).decode('utf-8')
+            eml = rsa.decrypt(i[5], private_key).decode('utf-8')
+            if i[0] == self.user_id:
+                if (p_to, lgn, psw) == (pswd_to, login, pswd):
+                    return True
+                elif (p_to, lgn, psw, u_name) == (pswd_to, login, pswd, usr_name):
+                    return True
+                elif (p_to, lgn, psw, u_name, eml) == (pswd_to, login, pswd, usr_name, email):
                     return True
         else:
             return False
@@ -146,12 +157,13 @@ class User:
                         VALUES (?,?,?,?,?,?,?,?)
                         """
         values = (self.user_id,
-                  password_to,
-                  login,
-                  password,
-                  user_name,
-                  email,
-                  datetime.datetime.strftime(datetime.datetime.now(), "%Y.%m.%d %H:%M:%S"),
+                  rsa.encrypt(password_to.encode('utf-8'), public_key),
+                  rsa.encrypt(login.encode('utf-8'), public_key),
+                  rsa.encrypt(password.encode('utf-8'), public_key),
+                  rsa.encrypt(user_name.encode('utf-8'), public_key),
+                  rsa.encrypt(email.encode('utf-8'), public_key),
+                  rsa.encrypt(datetime.datetime.strftime(datetime.datetime.now(), "%Y.%m.%d %H:%M:%S").encode('utf-8'),
+                              public_key),
                   None)
 
         con = sqlite3.connect(self.user_db)
@@ -200,7 +212,13 @@ class User:
 
         for pswd_to, lgn, paswd, usrname, email, date, user_id, row_id in all_items:
             if user_id == self.user_id:
-                container.append([pswd_to, lgn, paswd, usrname, email, date, row_id])
+                container.append([rsa.decrypt(pswd_to, private_key).decode('utf-8'),
+                                  rsa.decrypt(lgn, private_key).decode('utf-8'),
+                                  rsa.decrypt(paswd, private_key).decode('utf-8'),
+                                  rsa.decrypt(usrname, private_key).decode('utf-8'),
+                                  rsa.decrypt(email, private_key).decode('utf-8'),
+                                  rsa.decrypt(date, private_key).decode('utf-8'),
+                                  row_id])
         cur.close()
         con.close()
         return container
